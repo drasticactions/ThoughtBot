@@ -1,0 +1,72 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<Page
+    x:Class="ThoughtBot.WinUI.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ThoughtBot.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:thoughtbot="using:ThoughtBot"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Key="AIChatTemplate" x:DataType="thoughtbot:ChatMessage">
+            <Grid ColumnSpacing="5" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Margin="0,10,0,0" VerticalAlignment="Top" Background="White" Height="50" Width="50" CornerRadius="5">
+                    <Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Height="40" Source="{Binding Icon, Converter={StaticResource ImageByteConverter}}"/>
+                </Border>
+                <Grid Margin="5" VerticalAlignment="Center" Grid.Column="1">
+                    <ProgressBar Width="60" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" IsIndeterminate="True" ShowPaused="False" ShowError="False" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Message}" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="UserChatTemplate" x:DataType="thoughtbot:ChatMessage">
+            <Grid ColumnSpacing="5" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Margin="0,10,0,0" VerticalAlignment="Top" Background="White" Height="50" Width="50" CornerRadius="5">
+                    <Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Height="40" Source="{Binding Icon, Converter={StaticResource ImageByteConverter}}"/>
+                </Border>
+                <Grid Margin="5" VerticalAlignment="Center" Grid.Column="1">
+                    <ProgressBar Width="60" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" IsIndeterminate="True" ShowPaused="False" ShowError="False" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Message}" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        <local:ChatMessageTemplateSelector x:Key="ChatMessageTemplateSelector" AI="{StaticResource AIChatTemplate}" User="{StaticResource UserChatTemplate}"/>
+    </Page.Resources>
+    <Grid Margin="5" RowSpacing="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ListView SelectionMode="None"
+                  x:Name="MessagesList"
+                  ItemsSource="{x:Bind ViewModel.Messages, Mode=OneWay}"
+                  ItemTemplateSelector="{StaticResource ChatMessageTemplateSelector}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+        <Grid Margin="5" ColumnSpacing="5" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox KeyUp="InputBox_KeyUp" x:Name="InputBox" />
+            <Button Grid.Column="1" CommandParameter="{x:Bind InputBox.Text, Mode=TwoWay}" Command="{x:Bind ViewModel.SendMessageWithStringCommand, Mode=OneWay}" Content="Send"/>
+        </Grid>
+    </Grid>
+</Page>

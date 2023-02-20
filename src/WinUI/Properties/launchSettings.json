@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ThoughtBot.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ThoughtBot.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

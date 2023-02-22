@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.Maui.Controls.Shapes;
 using ELIZA.NET;
+using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
 
 namespace MauiEliza;
 
@@ -23,6 +24,8 @@ public partial class MainPage : ContentPage
         _dialog.Add(new Line(Speaker.Eliza, _session.GetGreeting()));
 
         _random = new Random(DateTime.Now.Second);
+
+        App.Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
     }
 
     private async void Button_Clicked(object sender, EventArgs e)
